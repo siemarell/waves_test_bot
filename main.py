@@ -1,20 +1,14 @@
+from flask import Flask
+from log_handlers import ch, fh
 from config import BOT_TOKEN
-URL = "https://api.telegram.org/bot%s/" % BOT_TOKEN
-MyURL = "https://example.com/hook"
+import routes
+import logging
 
-api = requests.Session()
-application = tornado.web.Application([
-    (r"/", Handler),
-])
+app = Flask(__name__, static_url_path='/static')
+app.register_blueprint(routes.api)
+app.logger.addHandler(ch)
+app.logger.addHandler(fh)
+app.logger.setLevel(logging.INFO)
 
 if __name__ == '__main__':
-    signal.signal(signal.SIGTERM, signal_term_handler)
-    try:
-        set_hook = api.get(URL + "setWebhook?url=%s" % MyURL)
-        if set_hook.status_code != 200:
-            logging.error("Can't set hook: %s. Quit." % set_hook.text)
-            exit(1)
-        application.listen(8888)
-        tornado.ioloop.IOLoop.current().start()
-    except KeyboardInterrupt:
-        signal_term_handler(signal.SIGTERM, None)
+    app.run(host='0.0.0.0', port=5000, threaded=True)
