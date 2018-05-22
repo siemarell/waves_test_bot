@@ -8,7 +8,7 @@ import json
 
 class Puller(Thread):
     def run(self):
-        last = -1
+        last = db.getLastUpdateIndex()
         while True:
             r = requests.get(URL + "getUpdates?offset=%s" % (last + 1))
             if r.status_code == 200:
