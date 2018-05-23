@@ -1,5 +1,6 @@
 import requests
 from config import API_KEY, NODE_ADDRESS
+from flask import current_app
 
 
 class Waves:
@@ -21,6 +22,10 @@ class Waves:
             "attachment": ""
         }
         resp = self._s.post(f'{self.node_address}/assets/transfer', json=data)
-        return resp.status_code == 200
+        current_app.logger.info(resp.json())
+        if resp.status_code == 200:
+            return resp.json()['id']
+        else:
+            return None
 
 waves = Waves(NODE_ADDRESS, API_KEY)
