@@ -12,8 +12,8 @@ app.logger.addHandler(fh)
 app.logger.setLevel(logging.INFO)
 
 if __name__ == '__main__':
-    pullerobj = poller.Puller()
-    pullerobj.daemon = True
-    pullerobj.start()
+    pollerobj = poller.Poller()
+    pollerobj.daemon = True
+    pollerobj.start()
     app.run(host='0.0.0.0', port=5000, threaded=True)
-    pullerobj.join()
+    pollerobj.join()
